@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container{text-align: center;}
+</style>
+<body>
+    <div class="container">
+        <h1>
+            Kalkulator Sebaran Frekuensi Sampel
+        </h1>
+        <hr>
+            <p>Masukkan Data Sampel</p>
+            <p>Pisahkan Dengan Koma !!!</p>
+            <input type="text" name="data" id="data">
+            <button id="hitung" onclick=hitung()>Hitung</button>
+        <hr>
+        <h1>
+            Hasil Perhitungan
+        </h1>
+        <div id="the_result"></div>
+    </div>
+
+    <script>
+        function getInput(){
+            let data = document.getElementById("data").value;
+            // Debug
+            console.log(data);
+            return data;
+        }
+
+        function median_res(data){
+            //Sorting data
+            let data_len = data.length
+            // bug, doesnt work
+            data.sort(function(a, b){return a-b})
+
+            // let data_len = data.length; 
+            console.log(data);
+
+            // for odd
+            if(data_len % 2 == 1){
+                let flag = Math.ceil((data_len / 2));
+                return data[flag-1];
+            }else{ //for even
+                return `${data[(data_len/2)-1]} & ${data[data_len/2]}`;
+            }
+        }
+        
+        function avg_sample(data){
+            let final_avg = 0
+            for(let x = 0; x < data.length;x++){
+                final_avg += data[x];
+            }
+            final_avg /= data.length
+            return final_avg;
+        }
+
+        function variant(data){
+            return std_dvt(data)**2;
+        }   
+
+        function std_dvt(data){
+            let avg = avg_sample(data); 
+            // store the res
+            let res = 0;
+            for(let x = 0; x < data.length;x++){
+                res += (data[x] - avg)**2;
+            }
+            res /= data.length;
+
+            return (Math.sqrt(res));
+        }
+        
+        function hitung(){
+            let data = getInput();
+            let data_splitted = data.split(",");
+            console.log(data_splitted);
+        
+            // Convert to num
+            let data_converted = data_splitted.map(Number);
+            console.log(data_converted);
+        
+            let median = median_res(data_converted)
+            let avg = avg_sample(data_converted);
+            let vrnt = variant(data_converted);
+            let stdvt = std_dvt(data_converted);
+        
+            // Parse to html
+            let res = `
+                <p>Median: ${median}</p>
+                <p>Rata-rata: ${avg}</p>
+                <p>Varian: ${vrnt}</p>
+                <p>Simpangan Baku: ${stdvt}</p>
+            `;
+        
+            document.getElementById("the_result").innerHTML=res;
+        }
+        </script>
+</body>
+</html>
